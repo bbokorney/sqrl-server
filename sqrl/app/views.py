@@ -16,12 +16,16 @@ def login(request, id=None):
     qrcodeurl = None
     if id is None:
         print "Creating a new QR code."
+        qrcodeurl = AuthManager.getNewSession()
     else:
-        qrcodeurl = "qrcodes/%s" % id
         print "Id is %s" % id
+        if AuthManager.claimSession(id):
+            return HttpResponseRedirect("/app")
+        else:
+            return HttpResponseRedirect("/app/login/")
 
     context = RequestContext(request)
 
-    context_dict = {"qrcodeurl": qrcodeurl}
+    context_dict = {"qrcodeurl": "qrcodes/%s" % qrcodeurl}
 
     return render_to_response("app/login.html", context_dict, context)

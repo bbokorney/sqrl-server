@@ -37,3 +37,4 @@ com_crashlytics_export_strings.xml
 local_settings.py
 *.png
 *.jpg
+*.db
