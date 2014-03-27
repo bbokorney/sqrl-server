@@ -1,4 +1,3 @@
-from subprocess import call
 from os import system
 
 EXECUTABLE_NAME = "qrcode.exe"
