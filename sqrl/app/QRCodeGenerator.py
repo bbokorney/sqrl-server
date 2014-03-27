@@ -1,5 +1,9 @@
+from subprocess import call
+from os import system
+
 EXECUTABLE_NAME = "qrcode.exe"
 
-def createNewQRImage(data, filename):
-
-    return None
+def createQRImage(filename, data):
+    cmd = EXECUTABLE_NAME + " -o %s.png -s 15 \"%s\"" % (filename, data)
+    print cmd
+    system(cmd)
