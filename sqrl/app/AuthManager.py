@@ -29,3 +29,8 @@ def claimSession(id):
         print "That id's not even in the db!"
         success = False
     return success
+
+def cleanUpUnclaimedSessions():
+    for s in UnclaimedSession.objects.all():
+        deleteImage(s.id, settings.QRCODE_PATH)
+    UnclaimedSession.objects.all().delete()
