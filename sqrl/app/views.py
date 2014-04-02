@@ -1,31 +1,53 @@
+import json
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import RequestContext
+from django.contrib.auth.decorators import login_required
+import django.contrib.auth as Auth
+from django.views.decorators.csrf import csrf_exempt
 from app import AuthManager
 
-def authenticated():
-    return AuthManager.authenticate()
 
+@login_required
+@csrf_exempt
 def index(request):
-    if not authenticated():
-        return HttpResponseRedirect("login")
-    else:
-        return HttpResponse("Successfully logged in!")
+    return HttpResponse("You have successfully logged in, %s!" % request.user.username)
 
-def login(request, id=None):
+@csrf_exempt
+def login(request):
     qrcodeurl = None
-    if id is None:
+    token = None
+    if request.method == "GET":
         print "Creating a new QR code."
-        qrcodeurl = AuthManager.getNewSession()
-    else:
-        print "Id is %s" % id
-        if AuthManager.claimSession(id):
-            return HttpResponseRedirect("/app")
+        qrcodeurl, token = AuthManager.createNewAuth()
+    elif request.method == "POST":
+        token = request.POST["token"]
+        user = AuthManager.loginAuthenticate(token)
+        if user is not None:
+            Auth.login(request, user)
+            return HttpResponseRedirect("/app/")
         else:
-            return HttpResponseRedirect("/app/login/")
+            return HttpResponse("Invalid login.")
 
     context = RequestContext(request)
 
-    context_dict = {"qrcodeurl": "qrcodes/%s" % qrcodeurl}
+    context_dict = {"qrcodeurl": "qrcodes/%s" % qrcodeurl, "token": token}
 
     return render_to_response("app/login.html", context_dict, context)
+
+
+
+@csrf_exempt
+def sqrl(request, token):
+    success = False
+    if request.method != "POST":
+        print "Request method not POST."
+    elif "idk" not in request.POST or "sig" not in request.POST:
+        print "Parameters not present in POST."
+    else:
+        success = AuthManager.sqrlAuthenticate(token, request.POST["idk"], request.POST["sig"])
+
+    response_dict = {"success": success}
+
+    data = json.dumps(response_dict)
+    return HttpResponse(data, mimetype="application/json")

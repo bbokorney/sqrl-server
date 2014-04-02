@@ -12,8 +12,13 @@ DATABASE_PATH = os.path.join(PROJECT_PATH, 'sqrl.db')
 
 from socket import gethostbyname, gethostname
 HOSTNAME = gethostbyname(gethostname())
+AUTHENTICATION_URL_FORMAT_STRING = "http://"+ HOSTNAME +"/app/sqrl/%s"
+LOGIN_URL_FORMAT_STRING = "http://"+ HOSTNAME +"/app/login/%s"
+LOGIN_URL = "/app/login/"
 
-UNCLAIMED_SESSION_TIMEOUT = 1 # in minutes
+PENDING_AUTH_TIMEOUT = 10  # in minutes
+
+SHARED_USER_PASSWORD = "simplepass"
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG

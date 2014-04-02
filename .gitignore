@@ -38,3 +38,7 @@ local_settings.py
 *.png
 *.jpg
 *.db
+
+# Encryption keys
+*.pem
+*.pub

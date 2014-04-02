@@ -18,8 +18,16 @@
     {% endif %}
     <p>2. Wait...</p>
     <p>3. Click this button</p>
-    <div class="buttonHolder">
-        <button>Let me in!</button>
-    </div>
+    <form method="post" action="/app/login/" class="buttonHolder">
+        <input type="hidden" name="token" value="{{ token }}" />
+        <input type="submit" value="Log me in!" />
+    </form>
+    <!--<div class="buttonHolder">-->
+        <!--{% if token %}-->
+        <!--<a href="/app/login/{{ token }}" >Login</a>-->
+        <!--{% else %}-->
+        <!--<a>Ooops...</a>-->
+        <!--{% endif %}-->
+    <!--</div>-->
 </body>
 </html>
