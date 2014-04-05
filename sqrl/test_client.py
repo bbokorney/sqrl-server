@@ -4,6 +4,7 @@ from Crypto.Hash import SHA256
 from base64 import b64encode
 from sys import argv
 import requests
+import codecs
 
 
 def getPublicKey(key_text):
@@ -24,7 +25,7 @@ def sendPost(url, data):
     print response.text
 
 def auth(url, key_file_loc):
-    key_text = open(key_file_loc, "r").read()
+    key_text = codecs.open(key_file_loc, "r", "ascii").read()
     sig = signData(key_text, url)
     pub_key_text = getPublicKey(key_text)
     params = {"idk": b64encode(pub_key_text), "sig": b64encode(sig)}
