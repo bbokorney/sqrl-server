@@ -2,7 +2,7 @@ import os
 
 EXECUTABLE_NAME = "qrcode.exe"
 FILE_SUFFIX = ".png"
-SIZE = 10
+SIZE = 5
 
 def addFilenameSuffix(filename):
     return "%s%s" % (filename, FILE_SUFFIX)
