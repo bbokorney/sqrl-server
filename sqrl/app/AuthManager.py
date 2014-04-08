@@ -26,7 +26,6 @@ def verifySignature(key_text, signature, data):
     return signer.verify(datahash, signature)
 
 def sqrlAuthenticate(token, key, signature):
-    print "Authenticating with token %s" % token
     success = False
     returnUrl = ""
     try:
@@ -39,6 +38,7 @@ def sqrlAuthenticate(token, key, signature):
             print "Invalid signature."
         else:
             success = True
+            PendingAuth.objects.get(token=token).delete()
             createNewLogin(token, user.get_username())
     except SQRLUser.DoesNotExist:
         print "Invalid identity key."
@@ -48,7 +48,6 @@ def sqrlAuthenticate(token, key, signature):
     return success
 
 def loginAuthenticate(token):
-    print "Logging in with token %s" % token
     user = None
     try:
         pendingLogin = PendingLogin.objects.get(token=token)
